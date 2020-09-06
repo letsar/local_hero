@@ -57,17 +57,29 @@ class LocalHeroController {
   }
 
   void animateIfNeeded(Rect rect) {
-    if (_lastRect != null && _lastRect != rect && !isAnimating) {
+    if (_lastRect != null && _lastRect != rect) {
+      final bool inAnimation = isAnimating;
+      Rect from = Rect.fromLTWH(
+        _lastRect.left - rect.left,
+        _lastRect.top - rect.top,
+        _lastRect.width,
+        _lastRect.height,
+      );
+      if (inAnimation) {
+        // We need to recompute the from.
+        final Rect currentRect = _animation.value;
+        from = Rect.fromLTWH(
+          currentRect.left + _lastRect.left - rect.left,
+          currentRect.top + _lastRect.top - rect.top,
+          currentRect.width,
+          currentRect.height,
+        );
+      }
       _isAnimating = true;
 
       _animation = _controller.drive(CurveTween(curve: curve)).drive(
             createRectTween(
-              Rect.fromLTWH(
-                _lastRect.left - rect.left,
-                _lastRect.top - rect.top,
-                _lastRect.width,
-                _lastRect.height,
-              ),
+              from,
               Rect.fromLTWH(
                 0,
                 0,
@@ -77,9 +89,21 @@ class LocalHeroController {
             ),
           );
 
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _controller.forward();
-      });
+      if (!inAnimation) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          _controller.forward();
+        });
+      } else {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          final Duration duration =
+              _controller.duration * (1 - _controller.value);
+          _controller.reset();
+          _controller.animateTo(
+            1,
+            duration: duration,
+          );
+        });
+      }
     }
     _lastRect = rect;
   }
