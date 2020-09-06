@@ -1,26 +1,23 @@
-# local_hero
+import 'package:flutter/material.dart';
+import 'package:local_hero/local_hero.dart';
 
-[![Pub][pub_badge]][pub]
+void main() {
+  runApp(const _LocalHeroApp());
+}
 
-A widget which implicitly launches a hero animation when its position changed within the same route.
+class _LocalHeroApp extends StatelessWidget {
+  const _LocalHeroApp({
+    Key key,
+  }) : super(key: key);
 
-## Usage
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: _LocalHeroPage(),
+    );
+  }
+}
 
-To be animated implicitly, a widget needs to be surrounded by a `LocalHero` widget with a unique `tag`:
-
-```dart
-const LocalHero(
-    tag: 'my_widget_tag',
-    child: MyWidget(),
-),
-```
-
-A `LocalHero` widget must have a `LocalHeroScope` ancestor which hosts the animations properties (duration, curve, etc.).
-At each frame we must have only one `LocalHero` per tag, per `LocalHeroScope`.
-
-The following example shows the basic usage of a `LocalHero` widget:
-
-```dart
 class _LocalHeroPage extends StatelessWidget {
   const _LocalHeroPage({
     Key key,
@@ -97,29 +94,3 @@ class _Box extends StatelessWidget {
     );
   }
 }
-```
-
-![Example][example]
-
-## Sponsoring
-
-I'm working on my packages on my free-time, but I don't have as much time as I would. If this package or any other package I created is helping you, please consider to sponsor me so that I can take time to read the issues, fix bugs, merge pull requests and add features to these packages.
-
-## Changelog
-
-Please see the [Changelog][changelog] page to know what's recently changed.
-
-## Contributions
-
-Feel free to contribute to this project.
-
-If you find a bug or want a feature, but don't know how to fix/implement it, please fill an [issue][issue].  
-If you fixed a bug or implemented a feature, please send a [pull request][pr].
-
-<!--Links-->
-[pub_badge]: https://img.shields.io/pub/v/local_hero.svg
-[pub]: https://pub.dartlang.org/packages/local_hero
-[changelog]: https://github.com/letsar/local_hero/blob/master/CHANGELOG.md
-[issue]: https://github.com/letsar/local_hero/issues
-[pr]: https://github.com/letsar/local_hero/pulls
-[example]: https://raw.githubusercontent.com/letsar/local_hero/master/packages/images/local_hero.gif
