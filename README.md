@@ -4,6 +4,24 @@
 
 A widget which implicitly launches a hero animation when its position changed within the same route.
 
+![Overview][overview]
+
+## Getting started
+
+In the `pubspec.yaml` of your flutter project, add the following dependency:
+
+```yaml
+dependencies:
+  ...
+  local_hero:
+```
+
+In your library add the following import:
+
+```dart
+import 'package:local_hero/local_hero.dart';
+```
+
 ## Usage
 
 To be animated implicitly, a widget needs to be surrounded by a `LocalHero` widget with a unique `tag`:
@@ -123,3 +141,4 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 [issue]: https://github.com/letsar/local_hero/issues
 [pr]: https://github.com/letsar/local_hero/pulls
 [example]: https://raw.githubusercontent.com/letsar/local_hero/master/packages/images/local_hero.gif
+[overview]: https://raw.githubusercontent.com/letsar/local_hero/master/packages/images/local_hero_02.gif
