@@ -13,16 +13,12 @@ class LocalHeroScope extends StatefulWidget {
   /// All local hero animations under this widget, will have the specified
   /// [duration], [curve], and [createRectTween].
   const LocalHeroScope({
-    Key key,
+    Key? key,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.linear,
     this.createRectTween = _defaultCreateTweenRect,
-    @required this.child,
-  })  : assert(child != null),
-        assert(duration != null),
-        assert(curve != null),
-        assert(createRectTween != null),
-        super(key: key);
+    required this.child,
+  }) : super(key: key);
 
   /// The duration of the animation.
   final Duration duration;
@@ -95,7 +91,7 @@ class _LocalHeroScopeState extends State<LocalHeroScope>
 
   @override
   void untrack(LocalHero localHero) {
-    final _LocalHeroTracker tracker = trackers[localHero.tag];
+    final _LocalHeroTracker? tracker = trackers[localHero.tag];
     if (tracker != null) {
       tracker.count--;
       if (tracker.count == 0) {
@@ -133,10 +129,9 @@ abstract class LocalHeroScopeState {
 
 class _LocalHeroTracker {
   _LocalHeroTracker({
-    @required this.overlayEntry,
-    @required this.controller,
-  })  : assert(overlayEntry != null),
-        assert(controller != null);
+    required this.overlayEntry,
+    required this.controller,
+  });
 
   final OverlayEntry overlayEntry;
   final LocalHeroController controller;
@@ -146,11 +141,11 @@ class _LocalHeroTracker {
   bool _overlayInserted = false;
 
   void addOverlay(BuildContext context) {
-    final OverlayState overlayState = Overlay.of(context);
+    final OverlayState? overlayState = Overlay.of(context);
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       if (!_removeRequested) {
-        overlayState.insert(overlayEntry);
+        overlayState!.insert(overlayEntry);
         _overlayInserted = true;
       }
     });
@@ -166,12 +161,10 @@ class _LocalHeroTracker {
 
 class _InheritedLocalHeroScopeState extends InheritedWidget {
   const _InheritedLocalHeroScopeState({
-    Key key,
-    @required this.state,
-    @required Widget child,
-  })  : assert(state != null),
-        assert(child != null),
-        super(key: key, child: child);
+    Key? key,
+    required this.state,
+    required Widget child,
+  }) : super(key: key, child: child);
 
   final LocalHeroScopeState state;
 
@@ -180,13 +173,14 @@ class _InheritedLocalHeroScopeState extends InheritedWidget {
 }
 
 extension BuildContextExtensions on BuildContext {
-  T getInheritedWidget<T extends InheritedWidget>() {
-    final InheritedElement elem = getElementForInheritedWidgetOfExactType<T>();
-    return elem?.widget as T;
+  T? getInheritedWidget<T extends InheritedWidget>() {
+    final InheritedElement elem = getElementForInheritedWidgetOfExactType<T>()!;
+    return elem.widget as T?;
   }
 
   LocalHeroScopeState getLocalHeroScopeState() {
-    final inheritedState = getInheritedWidget<_InheritedLocalHeroScopeState>();
+    final _InheritedLocalHeroScopeState? inheritedState =
+        getInheritedWidget<_InheritedLocalHeroScopeState>();
     assert(() {
       if (inheritedState == null) {
         throw FlutterError('No LocalHeroScope for a LocalHero\n'
@@ -196,10 +190,10 @@ extension BuildContextExtensions on BuildContext {
       return true;
     }());
 
-    return inheritedState.state;
+    return inheritedState!.state;
   }
 }
 
-RectTween _defaultCreateTweenRect(Rect begin, Rect end) {
+Tween<Rect?> _defaultCreateTweenRect(Rect? begin, Rect? end) {
   return MaterialRectArcTween(begin: begin, end: end);
 }

@@ -25,12 +25,11 @@ class _LocalHeroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
         child: LocalHeroScope(
-          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          child: const _LocalHeroPlayground(),
+          child: _LocalHeroPlayground(),
         ),
       ),
     );
@@ -65,7 +64,7 @@ class _LocalHeroPlaygroundState extends State<_LocalHeroPlayground> {
             ),
           ),
         ),
-        RaisedButton(
+        ElevatedButton(
           onPressed: () {
             setState(() {
               alignment = alignment == Alignment.topLeft

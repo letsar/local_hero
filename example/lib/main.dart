@@ -165,7 +165,6 @@ class _WrapReorderingAnimationState extends State<_WrapReorderingAnimation> {
             child: LocalHeroOverlay(
               child: Center(
                 child: Wrap(
-                  alignment: WrapAlignment.start,
                   spacing: spacing,
                   runSpacing: runSpacing,
                   children: <Widget>[
@@ -449,7 +448,7 @@ class _TestOneState extends State<TestOne> {
     return Column(
       children: <Widget>[
         ...children,
-        FlatButton(
+        TextButton(
           onPressed: () {
             setState(() {
               children.shuffle();

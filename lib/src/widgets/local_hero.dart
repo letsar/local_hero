@@ -26,15 +26,12 @@ class LocalHero extends StatefulWidget {
   /// If between two frames, the position of a [LocalHero] with the same tag
   /// changes, a local hero animation will be triggered.
   const LocalHero({
-    Key key,
-    @required this.tag,
+    Key? key,
+    required this.tag,
     this.flightShuttleBuilder,
     this.enabled = true,
-    @required this.child,
-  })  : assert(tag != null),
-        assert(enabled != null),
-        assert(child != null),
-        super(key: key);
+    required this.child,
+  }) : super(key: key);
 
   /// The identifier for this particular local hero. This tag must be unique
   /// under the same [LocalHeroScope].
@@ -46,7 +43,7 @@ class LocalHero extends StatefulWidget {
   /// flight.
   ///
   /// If none is provided, the child is shown in-flight by default.
-  final LocalHeroFlightShuttleBuilder flightShuttleBuilder;
+  final LocalHeroFlightShuttleBuilder? flightShuttleBuilder;
 
   /// Whether the hero animation should be enabled.
   final bool enabled;
@@ -62,8 +59,8 @@ class LocalHero extends StatefulWidget {
 
 class _LocalHeroState extends State<LocalHero>
     with SingleTickerProviderStateMixin<LocalHero> {
-  LocalHeroController controller;
-  LocalHeroScopeState scopeState;
+  late LocalHeroController controller;
+  late LocalHeroScopeState scopeState;
 
   @override
   void initState() {

@@ -11,21 +11,19 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
   ///
   /// The [controller] must not be null.
   RenderLocalHeroLeaderLayer({
-    @required LocalHeroController controller,
-    RenderBox child,
-  })  : assert(controller != null),
-        super(child) {
+    required LocalHeroController controller,
+    RenderBox? child,
+  }) : super(child) {
     _controller = controller..addStatusListener(_onAnimationStatusChanged);
   }
 
-  LocalHeroController get controller => _controller;
-  LocalHeroController _controller;
+  LocalHeroController get controller => _controller!;
+  LocalHeroController? _controller;
   set controller(LocalHeroController value) {
-    assert(value != null);
     if (_controller != value) {
       _controller?.removeStatusListener(_onAnimationStatusChanged);
       _controller = value;
-      _controller.addStatusListener(_onAnimationStatusChanged);
+      _controller!.addStatusListener(_onAnimationStatusChanged);
       markNeedsPaint();
     }
   }
@@ -41,14 +39,15 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
   bool get alwaysNeedsCompositing => true;
 
   @override
-  bool hitTest(BoxHitTestResult result, {Offset position}) {
-    return !controller.isAnimating && super.hitTest(result, position: position);
+  bool hitTest(BoxHitTestResult result, {Offset? position}) {
+    return !controller.isAnimating &&
+        super.hitTest(result, position: position!);
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
     final Rect rect = Rect.fromPoints(offset, size.bottomRight(offset));
-    _controller.animateIfNeeded(rect);
+    _controller!.animateIfNeeded(rect);
 
     if (layer == null) {
       layer = LeaderLayer(link: controller.link, offset: offset);
@@ -66,7 +65,7 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
             context.pushOpacity(offset, 0, super.paint)
         : super.paint;
 
-    context.pushLayer(layer, painter, Offset.zero);
+    context.pushLayer(layer!, painter, Offset.zero);
 
     assert(layer != null);
   }
@@ -89,20 +88,19 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
 
 class RenderLocalHeroFollowerLayer extends RenderProxyBox {
   RenderLocalHeroFollowerLayer({
-    @required LocalHeroController controller,
-    RenderBox child,
-  })  : assert(controller != null),
-        super(child) {
+    required LocalHeroController controller,
+    RenderBox? child,
+  }) : super(child) {
     _controller = controller..addListener(markNeedsLayout);
   }
 
-  LocalHeroController get controller => _controller;
-  LocalHeroController _controller;
-  set controller(LocalHeroController value) {
+  LocalHeroController? get controller => _controller;
+  LocalHeroController? _controller;
+  set controller(LocalHeroController? value) {
     if (_controller != value) {
       _controller?.removeListener(markNeedsLayout);
       _controller = value;
-      _controller.addListener(markNeedsLayout);
+      _controller!.addListener(markNeedsLayout);
       markNeedsPaint();
     }
   }
@@ -118,7 +116,7 @@ class RenderLocalHeroFollowerLayer extends RenderProxyBox {
 
   /// The layer we created when we were last painted.
   @override
-  LocalHeroLayer get layer => super.layer as LocalHeroLayer;
+  LocalHeroLayer? get layer => super.layer as LocalHeroLayer?;
 
   /// Return the transform that was used in the last composition phase, if any.
   ///
@@ -131,33 +129,33 @@ class RenderLocalHeroFollowerLayer extends RenderProxyBox {
   }
 
   @override
-  bool hitTest(BoxHitTestResult result, {Offset position}) {
+  bool hitTest(BoxHitTestResult result, {Offset? position}) {
     // We can never interact with this follower.
     return false;
   }
 
   @override
   void performLayout() {
-    final Size requestedSize = controller.linkedSize;
+    final Size? requestedSize = controller!.linkedSize;
     final BoxConstraints childConstraints = requestedSize == null
         ? constraints
         : constraints.enforce(BoxConstraints.tight(requestedSize));
-    child.layout(childConstraints, parentUsesSize: true);
-    size = constraints.constrain(child.size);
+    child!.layout(childConstraints, parentUsesSize: true);
+    size = constraints.constrain(child!.size);
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
     if (layer == null) {
       layer = LocalHeroLayer(
-        controller: controller,
+        controller: controller!,
       );
     } else {
-      layer.controller = controller;
+      layer!.controller = controller;
     }
 
     context.pushLayer(
-      layer,
+      layer!,
       super.paint,
       Offset.zero,
       childPaintBounds: const Rect.fromLTRB(
@@ -172,7 +170,7 @@ class RenderLocalHeroFollowerLayer extends RenderProxyBox {
 
   @override
   void visitChildrenForSemantics(RenderObjectVisitor visitor) {
-    if (controller.isAnimating) {
+    if (controller!.isAnimating) {
       super.visitChildrenForSemantics(visitor);
     }
   }
