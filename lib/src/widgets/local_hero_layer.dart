@@ -6,11 +6,10 @@ import 'package:local_hero/src/rendering/local_hero_layer.dart';
 
 class LocalHeroFollower extends SingleChildRenderObjectWidget {
   const LocalHeroFollower({
-    Key key,
-    @required this.controller,
-    Widget child,
-  })  : assert(controller != null),
-        super(
+    Key? key,
+    required this.controller,
+    Widget? child,
+  }) : super(
           key: key,
           child: child,
         );
@@ -58,11 +57,10 @@ class LocalHeroLeader extends SingleChildRenderObjectWidget {
   /// The [link] property must not be null, and must not be currently being used
   /// by any other [CompositedTransformTarget] object that is in the tree.
   const LocalHeroLeader({
-    Key key,
-    @required this.controller,
-    Widget child,
-  })  : assert(controller != null),
-        super(key: key, child: child);
+    Key? key,
+    required this.controller,
+    Widget? child,
+  }) : super(key: key, child: child);
 
   final LocalHeroController controller;
 

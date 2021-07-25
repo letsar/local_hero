@@ -8,7 +8,7 @@ void main() {
 
 class _LocalHeroApp extends StatelessWidget {
   const _LocalHeroApp({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -28,7 +28,7 @@ class _LocalHeroApp extends StatelessWidget {
 
 class _LocalHeroPlayground extends StatelessWidget {
   const _LocalHeroPlayground({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -62,36 +62,34 @@ class _LocalHeroPlayground extends StatelessWidget {
 class _TileModel extends Equatable {
   const _TileModel({this.color, this.text});
 
-  final Color color;
-  final String text;
+  final Color? color;
+  final String? text;
 
   @override
-  List<Object> get props => [color, text];
+  List<Object?> get props => [color, text];
 
   @override
   String toString() {
-    return text;
+    return text!;
   }
 }
 
 class _Tile extends StatelessWidget {
   const _Tile({
-    Key key,
-    @required this.model,
-    @required this.size,
+    Key? key,
+    required this.model,
+    required this.size,
     this.onTap,
-  })  : assert(model != null),
-        assert(size != null),
-        super(key: key);
+  }) : super(key: key);
 
   final _TileModel model;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final double size;
 
   @override
   Widget build(BuildContext context) {
     return LocalHero(
-      tag: model.text,
+      tag: model.text!,
       child: GestureDetector(
         onTap: onTap,
         child: _RawTile(
@@ -105,18 +103,18 @@ class _Tile extends StatelessWidget {
 
 class _RawTile extends StatelessWidget {
   const _RawTile({
-    Key key,
-    @required this.model,
-    @required this.size,
+    Key? key,
+    required this.model,
+    required this.size,
   }) : super(key: key);
 
-  final _TileModel model;
+  final _TileModel? model;
   final double size;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: model.color,
+      color: model!.color,
       height: size,
       width: size,
       child: Padding(
@@ -124,7 +122,7 @@ class _RawTile extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: Colors.white70,
           foregroundColor: Colors.black54,
-          child: Text(model.text),
+          child: Text(model!.text!),
         ),
       ),
     );
@@ -133,7 +131,7 @@ class _RawTile extends StatelessWidget {
 
 class _WrapReorderingAnimation extends StatefulWidget {
   const _WrapReorderingAnimation({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -165,7 +163,6 @@ class _WrapReorderingAnimationState extends State<_WrapReorderingAnimation> {
             child: LocalHeroOverlay(
               child: Center(
                 child: Wrap(
-                  alignment: WrapAlignment.start,
                   spacing: spacing,
                   runSpacing: runSpacing,
                   children: <Widget>[
@@ -209,7 +206,7 @@ class _WrapReorderingAnimationState extends State<_WrapReorderingAnimation> {
 
 class _AcrossContainersAnimation extends StatefulWidget {
   const _AcrossContainersAnimation({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -288,7 +285,7 @@ class _AcrossContainersAnimationState
 
 class _DraggableExample extends StatefulWidget {
   const _DraggableExample({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -296,7 +293,7 @@ class _DraggableExample extends StatefulWidget {
 }
 
 class _DraggableExampleState extends State<_DraggableExample> {
-  final List<_TileModel> tiles = <_TileModel>[];
+  final List<_TileModel?> tiles = <_TileModel?>[];
 
   @override
   void initState() {
@@ -332,7 +329,7 @@ class _DraggableExampleState extends State<_DraggableExample> {
     );
   }
 
-  void onDrag(_TileModel source, _TileModel target) {
+  void onDrag(_TileModel? source, _TileModel? target) {
     // source comes before target.
     final int index = tiles.indexOf(target);
     tiles.remove(source);
@@ -343,12 +340,12 @@ class _DraggableExampleState extends State<_DraggableExample> {
 
 class _DraggableTile extends StatefulWidget {
   _DraggableTile({
-    Key key,
+    Key? key,
     this.model,
   })  : child = _RawTile(model: model, size: 80),
         super(key: key);
 
-  final _TileModel model;
+  final _TileModel? model;
   final Widget child;
 
   @override
@@ -371,7 +368,7 @@ class _DraggableTileState extends State<_DraggableTile> {
       feedback: widget.child,
       childWhenDragging: Container(width: 80, height: 80),
       child: LocalHero(
-        tag: widget.model,
+        tag: widget.model!,
         enabled: !dragging,
         child: widget.child,
       ),
@@ -381,11 +378,11 @@ class _DraggableTileState extends State<_DraggableTile> {
 
 class LocalHeroOverlay extends StatefulWidget {
   const LocalHeroOverlay({
-    Key key,
+    Key? key,
     this.child,
   }) : super(key: key);
 
-  final Widget child;
+  final Widget? child;
 
   @override
   _LocalHeroOverlayState createState() => _LocalHeroOverlayState();
@@ -397,7 +394,7 @@ class _LocalHeroOverlayState extends State<LocalHeroOverlay> {
     return ClipRect(
       child: Overlay(
         initialEntries: <OverlayEntry>[
-          OverlayEntry(builder: (context) => widget.child),
+          OverlayEntry(builder: (context) => widget.child!),
         ],
       ),
     );
@@ -406,7 +403,7 @@ class _LocalHeroOverlayState extends State<LocalHeroOverlay> {
 
 class TestOne extends StatefulWidget {
   const TestOne({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -449,7 +446,7 @@ class _TestOneState extends State<TestOne> {
     return Column(
       children: <Widget>[
         ...children,
-        FlatButton(
+        TextButton(
           onPressed: () {
             setState(() {
               children.shuffle();

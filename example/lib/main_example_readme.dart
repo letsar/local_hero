@@ -7,7 +7,7 @@ void main() {
 
 class _LocalHeroApp extends StatelessWidget {
   const _LocalHeroApp({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -20,17 +20,17 @@ class _LocalHeroApp extends StatelessWidget {
 
 class _LocalHeroPage extends StatelessWidget {
   const _LocalHeroPage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
         child: LocalHeroScope(
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          child: const _LocalHeroPlayground(),
+          child: _LocalHeroPlayground(),
         ),
       ),
     );
@@ -39,7 +39,7 @@ class _LocalHeroPage extends StatelessWidget {
 
 class _LocalHeroPlayground extends StatefulWidget {
   const _LocalHeroPlayground({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -65,7 +65,7 @@ class _LocalHeroPlaygroundState extends State<_LocalHeroPlayground> {
             ),
           ),
         ),
-        RaisedButton(
+        ElevatedButton(
           onPressed: () {
             setState(() {
               alignment = alignment == Alignment.topLeft
@@ -82,7 +82,7 @@ class _LocalHeroPlaygroundState extends State<_LocalHeroPlayground> {
 
 class _Box extends StatelessWidget {
   const _Box({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

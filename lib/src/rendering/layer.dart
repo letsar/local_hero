@@ -12,8 +12,8 @@ class LocalHeroLayer extends ContainerLayer {
   ///
   /// The [controller] property must not be null.
   LocalHeroLayer({
-    @required this.controller,
-  }) : assert(controller != null);
+    required this.controller,
+  });
 
   /// An instance which holds the offset from the origin of the leader layer
   /// to the origin of the child layers, used when the layer is linked to a
@@ -21,26 +21,23 @@ class LocalHeroLayer extends ContainerLayer {
   ///
   /// The scene must be explicitly recomposited after this property is changed
   /// (as described at [Layer]).
-  ///
-  /// The [controller] property must be non-null before the compositing phase of
-  /// the pipeline.
   LocalHeroController controller;
 
-  Offset _lastOffset;
-  Matrix4 _lastTransform;
-  Matrix4 _invertedTransform;
+  Offset? _lastOffset;
+  Matrix4? _lastTransform;
+  Matrix4? _invertedTransform;
   bool _inverseDirty = true;
 
-  Offset _transformOffset<S>(Offset localPosition) {
+  Offset? _transformOffset<S>(Offset localPosition) {
     if (_inverseDirty) {
-      _invertedTransform = Matrix4.tryInvert(getLastTransform());
+      _invertedTransform = Matrix4.tryInvert(getLastTransform()!);
       _inverseDirty = false;
     }
     if (_invertedTransform == null) {
       return null;
     }
     final Vector4 vector = Vector4(localPosition.dx, localPosition.dy, 0, 1);
-    final Vector4 result = _invertedTransform.transform(vector);
+    final Vector4 result = _invertedTransform!.transform(vector);
     return Offset(
       result[0] - controller.linkedOffset.dx,
       result[1] - controller.linkedOffset.dy,
@@ -49,12 +46,15 @@ class LocalHeroLayer extends ContainerLayer {
 
   @override
   @protected
-  bool findAnnotations<S>(AnnotationResult<S> result, Offset localPosition,
-      {@required bool onlyFirst}) {
+  bool findAnnotations<S extends Object>(
+    AnnotationResult<S> result,
+    Offset localPosition, {
+    required bool onlyFirst,
+  }) {
     if (controller.link.leader == null) {
       return false;
     }
-    final Offset transformedOffset = _transformOffset<S>(localPosition);
+    final Offset? transformedOffset = _transformOffset<S>(localPosition);
     if (transformedOffset == null) {
       return false;
     }
@@ -68,13 +68,13 @@ class LocalHeroLayer extends ContainerLayer {
   /// a degenerate matrix applied, then this will be null.
   ///
   /// This method returns a new [Matrix4] instance each time it is invoked.
-  Matrix4 getLastTransform() {
+  Matrix4? getLastTransform() {
     if (_lastTransform == null) {
       return null;
     }
     final Matrix4 result =
-        Matrix4.translationValues(-_lastOffset.dx, -_lastOffset.dy, 0);
-    result.multiply(_lastTransform);
+        Matrix4.translationValues(-_lastOffset!.dx, -_lastOffset!.dy, 0);
+    result.multiply(_lastTransform!);
     return result;
   }
 
@@ -84,13 +84,13 @@ class LocalHeroLayer extends ContainerLayer {
   /// treated as the child of the second, and so forth. The first layer in the
   /// list won't have [applyTransform] called on it. The first layer may be
   /// null.
-  Matrix4 _collectTransformForLayerChain(List<ContainerLayer> layers) {
+  Matrix4 _collectTransformForLayerChain(List<ContainerLayer?> layers) {
     // Initialize our result matrix.
     final Matrix4 result = Matrix4.identity();
     // Apply each layer to the matrix in turn, starting from the last layer,
     // and providing the previous layer as the child.
     for (int index = layers.length - 1; index > 0; index -= 1) {
-      layers[index].applyTransform(layers[index - 1], result);
+      layers[index]!.applyTransform(layers[index - 1], result);
     }
     return result;
   }
@@ -103,29 +103,29 @@ class LocalHeroLayer extends ContainerLayer {
       return;
     }
     // If we're linked, check the link is valid.
-    assert(controller.link.leader.owner == owner,
+    assert(controller.link.leader!.owner == owner,
         'Linked LeaderLayer anchor is not in the same layer tree as the FollowerLayer.');
     // Collect all our ancestors into a Set so we can recognize them.
     final Set<Layer> ancestors = <Layer>{};
-    Layer ancestor = parent;
+    Layer? ancestor = parent;
     while (ancestor != null) {
       ancestors.add(ancestor);
       ancestor = ancestor.parent;
     }
     // Collect all the layers from a hypothetical child (null) of the target
     // layer up to the common ancestor layer.
-    ContainerLayer layer = controller.link.leader;
-    final List<ContainerLayer> forwardLayers = <ContainerLayer>[null, layer];
+    ContainerLayer layer = controller.link.leader!;
+    final List<ContainerLayer?> forwardLayers = <ContainerLayer?>[null, layer];
     do {
-      layer = layer.parent;
+      layer = layer.parent!;
       forwardLayers.add(layer);
     } while (!ancestors.contains(layer));
     ancestor = layer;
     // Collect all the layers from this layer up to the common ancestor layer.
     layer = this;
-    final List<ContainerLayer> inverseLayers = <ContainerLayer>[layer];
+    final List<ContainerLayer?> inverseLayers = <ContainerLayer?>[layer];
     do {
-      layer = layer.parent;
+      layer = layer.parent!;
       inverseLayers.add(layer);
     } while (layer != ancestor);
     // Establish the forward and backward matrices given these lists of layers.
@@ -173,8 +173,8 @@ class LocalHeroLayer extends ContainerLayer {
 
     if (controller.isAnimating) {
       engineLayer = builder.pushTransform(
-        _lastTransform.storage,
-        oldLayer: engineLayer as ui.TransformEngineLayer,
+        _lastTransform!.storage,
+        oldLayer: engineLayer as ui.TransformEngineLayer?,
       );
       addChildrenToScene(builder);
       builder.pop();
@@ -185,11 +185,11 @@ class LocalHeroLayer extends ContainerLayer {
   }
 
   @override
-  void applyTransform(Layer child, Matrix4 transform) {
+  void applyTransform(Layer? child, Matrix4 transform) {
     assert(child != null);
     assert(transform != null);
 
-    transform.multiply(_lastTransform);
+    transform.multiply(_lastTransform!);
   }
 
   @override

@@ -7,35 +7,35 @@ import 'package:flutter/scheduler.dart';
 
 /// Signature for a function that takes two [Rect] instances and returns a
 /// [RectTween] that transitions between them.
-typedef RectTweenSupplier = Tween<Rect> Function(Rect begin, Rect end);
+typedef RectTweenSupplier = Tween<Rect?> Function(Rect begin, Rect end);
 
 class LocalHeroController {
   LocalHeroController({
-    @required TickerProvider vsync,
-    @required Duration duration,
-    @required this.curve,
-    @required this.createRectTween,
-    @required this.tag,
-  })  : assert(createRectTween != null),
-        assert(tag != null),
-        link = LayerLink() {
-    _controller = AnimationController(vsync: vsync, duration: duration)
-      ..addStatusListener(_onAnimationStatusChanged);
-  }
+    required TickerProvider vsync,
+    required Duration duration,
+    required this.curve,
+    required this.createRectTween,
+    required this.tag,
+  })   : link = LayerLink(),
+        _vsync = vsync,
+        _initialDuration = duration;
 
   final Object tag;
 
   final LayerLink link;
-
-  AnimationController _controller;
-  Animation<Rect> _animation;
-  Rect _lastRect;
+  final TickerProvider _vsync;
+  final Duration _initialDuration;
+  late final AnimationController _controller =
+      AnimationController(vsync: _vsync, duration: _initialDuration)
+        ..addStatusListener(_onAnimationStatusChanged);
+  Animation<Rect?>? _animation;
+  Rect? _lastRect;
 
   Curve curve;
   RectTweenSupplier createRectTween;
 
-  Duration get duration => _controller.duration;
-  set duration(Duration value) {
+  Duration? get duration => _controller.duration;
+  set duration(Duration? value) {
     _controller.duration = value;
   }
 
@@ -44,9 +44,9 @@ class LocalHeroController {
 
   Animation<double> get view => _controller.view;
 
-  Offset get linkedOffset => _animation?.value?.topLeft ?? _lastRect.topLeft;
+  Offset get linkedOffset => _animation?.value?.topLeft ?? _lastRect!.topLeft;
 
-  Size get linkedSize => _animation?.value?.size ?? _lastRect?.size;
+  Size? get linkedSize => _animation?.value?.size ?? _lastRect?.size;
 
   void _onAnimationStatusChanged(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
@@ -60,17 +60,17 @@ class LocalHeroController {
     if (_lastRect != null && _lastRect != rect) {
       final bool inAnimation = isAnimating;
       Rect from = Rect.fromLTWH(
-        _lastRect.left - rect.left,
-        _lastRect.top - rect.top,
-        _lastRect.width,
-        _lastRect.height,
+        _lastRect!.left - rect.left,
+        _lastRect!.top - rect.top,
+        _lastRect!.width,
+        _lastRect!.height,
       );
       if (inAnimation) {
         // We need to recompute the from.
-        final Rect currentRect = _animation.value;
+        final Rect currentRect = _animation!.value!;
         from = Rect.fromLTWH(
-          currentRect.left + _lastRect.left - rect.left,
-          currentRect.top + _lastRect.top - rect.top,
+          currentRect.left + _lastRect!.left - rect.left,
+          currentRect.top + _lastRect!.top - rect.top,
           currentRect.width,
           currentRect.height,
         );
@@ -90,13 +90,13 @@ class LocalHeroController {
           );
 
       if (!inAnimation) {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
           _controller.forward();
         });
       } else {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
           final Duration duration =
-              _controller.duration * (1 - _controller.value);
+              _controller.duration! * (1 - _controller.value);
           _controller.reset();
           _controller.animateTo(
             1,

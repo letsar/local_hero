@@ -6,16 +6,6 @@ import 'package:local_hero/src/widgets/local_hero_layer.dart';
 
 void main() {
   group('LocalHero', () {
-    test('tag must not be null', () {
-      expect(
-        () => LocalHero(
-          tag: null,
-          child: const SizedBox(),
-        ),
-        throwsAssertionError,
-      );
-    });
-
     testWidgets('must be a descendant of `LocalHeroScope`', (tester) async {
       await tester.pumpWidget(
         const LocalHero(
@@ -82,8 +72,8 @@ void main() {
 
 class TestWidget extends StatelessWidget {
   const TestWidget({
-    Key key,
-    @required this.position,
+    Key? key,
+    required this.position,
   }) : super(key: key);
 
   final Offset position;
@@ -118,7 +108,7 @@ class TestWidget extends StatelessWidget {
 
 class MyBox extends StatelessWidget {
   const MyBox({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
