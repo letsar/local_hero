@@ -59,19 +59,19 @@ class LocalHero extends StatefulWidget {
 
 class _LocalHeroState extends State<LocalHero>
     with SingleTickerProviderStateMixin<LocalHero> {
-  late LocalHeroController controller;
-  late LocalHeroScopeState scopeState;
+  late LocalHeroController? controller;
+  late LocalHeroScopeState? scopeState;
 
   @override
   void initState() {
     super.initState();
-    scopeState = context.getLocalHeroScopeState();
+    scopeState = widget.enabled ? context.getLocalHeroScopeState() : null;
     controller = scopeState.track(context, widget);
   }
 
   @override
   void dispose() {
-    scopeState.untrack(widget);
+    scopeState?.untrack(widget);
     super.dispose();
   }
 
@@ -79,7 +79,7 @@ class _LocalHeroState extends State<LocalHero>
   Widget build(BuildContext context) {
     return widget.enabled
         ? LocalHeroLeader(
-            controller: controller,
+            controller: controller!,
             child: widget.child,
           )
         : widget.child;
