@@ -1,5 +1,4 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -16,7 +15,7 @@ class LocalHeroController {
     required this.curve,
     required this.createRectTween,
     required this.tag,
-  })   : link = LayerLink(),
+  })  : link = LayerLink(),
         _vsync = vsync,
         _initialDuration = duration;
 
