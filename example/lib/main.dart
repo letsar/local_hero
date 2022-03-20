@@ -241,12 +241,13 @@ class _AcrossContainersAnimationState
         Padding(
           padding: const EdgeInsets.all(4),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ...rowTiles.map(
                 (tile) => _Tile(
                   key: ValueKey(tile),
                   model: tile,
-                  size: 80,
+                  size: 60,
                   onTap: () {
                     setState(() {
                       colTiles.add(tile);
