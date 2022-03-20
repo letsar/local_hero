@@ -187,7 +187,6 @@ class LocalHeroLayer extends ContainerLayer {
   @override
   void applyTransform(Layer? child, Matrix4 transform) {
     assert(child != null);
-    assert(transform != null);
 
     transform.multiply(_lastTransform!);
   }

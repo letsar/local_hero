@@ -147,7 +147,7 @@ class _WrapReorderingAnimationState extends State<_WrapReorderingAnimation> {
   @override
   void initState() {
     super.initState();
-    final List<MaterialColor> colors = Colors.primaries;
+    const List<MaterialColor> colors = Colors.primaries;
     for (var i = 0; i < colors.length; i++) {
       tiles.add(_TileModel(color: colors[i], text: '$i'));
     }
@@ -222,12 +222,12 @@ class _AcrossContainersAnimationState
   @override
   void initState() {
     super.initState();
-    final List<MaterialColor> primaries = Colors.primaries;
+    const List<MaterialColor> primaries = Colors.primaries;
     for (var i = 0; i < 5; i++) {
       final _TileModel tile = _TileModel(color: primaries[i], text: 'p$i');
       rowTiles.add(tile);
     }
-    final List<MaterialAccentColor> accents = Colors.accents;
+    const List<MaterialAccentColor> accents = Colors.accents;
     for (var i = 0; i < 5; i++) {
       final _TileModel tile = _TileModel(color: accents[i], text: 'a$i');
       colTiles.add(tile);
@@ -298,7 +298,7 @@ class _DraggableExampleState extends State<_DraggableExample> {
   @override
   void initState() {
     super.initState();
-    final List<MaterialColor> colors = Colors.primaries;
+    const List<MaterialColor> colors = Colors.primaries;
     for (var i = 0; i < colors.length; i++) {
       tiles.add(_TileModel(color: colors[i], text: 'd$i'));
     }

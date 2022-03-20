@@ -28,7 +28,7 @@ class _LocalHeroPage extends StatelessWidget {
     return const Scaffold(
       body: SafeArea(
         child: LocalHeroScope(
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 350),
           curve: Curves.easeInOut,
           child: _LocalHeroPlayground(),
         ),

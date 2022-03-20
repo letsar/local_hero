@@ -1,5 +1,4 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:local_hero/src/rendering/controller.dart';
 import 'package:local_hero/src/rendering/layer.dart';
