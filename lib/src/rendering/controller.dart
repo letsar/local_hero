@@ -9,6 +9,11 @@ import 'package:flutter/scheduler.dart';
 /// [RectTween] that transitions between them.
 typedef RectTweenSupplier = Tween<Rect?> Function(Rect begin, Rect end);
 
+/// This allows a value of type T or T? to be treated as a value of type T?.
+/// We use this so that APIs that have become non-nullable can still be used
+/// with `!` and `?` to support older versions of the API as well.
+T? ambiguate<T>(T? value) => value;
+
 class LocalHeroController {
   LocalHeroController({
     required TickerProvider vsync,
@@ -16,7 +21,7 @@ class LocalHeroController {
     required this.curve,
     required this.createRectTween,
     required this.tag,
-  })   : link = LayerLink(),
+  })  : link = LayerLink(),
         _vsync = vsync,
         _initialDuration = duration;
 
@@ -90,11 +95,11 @@ class LocalHeroController {
           );
 
       if (!inAnimation) {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
+        ambiguate(SchedulerBinding.instance)!.addPostFrameCallback((_) {
           _controller.forward();
         });
       } else {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
+        ambiguate(SchedulerBinding.instance)!.addPostFrameCallback((_) {
           final Duration duration =
               _controller.duration! * (1 - _controller.value);
           _controller.reset();

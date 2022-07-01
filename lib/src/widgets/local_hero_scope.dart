@@ -143,7 +143,7 @@ class _LocalHeroTracker {
   void addOverlay(BuildContext context) {
     final OverlayState? overlayState = Overlay.of(context);
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    ambiguate(SchedulerBinding.instance)!.addPostFrameCallback((_) {
       if (!_removeRequested) {
         overlayState!.insert(overlayEntry);
         _overlayInserted = true;
