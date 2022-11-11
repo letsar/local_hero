@@ -34,11 +34,12 @@ class _LocalHeroPlayground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const TabBar(
             tabs: <Widget>[
+              Text('Simple example'),
               Text('Animate wrap reordering'),
               Text('Move between containers'),
               Text('Draggable content'),
@@ -48,6 +49,7 @@ class _LocalHeroPlayground extends StatelessWidget {
         body: const SafeArea(
           child: TabBarView(
             children: <Widget>[
+              _SimpleExample(),
               _WrapReorderingAnimation(),
               _AcrossContainersAnimation(),
               _DraggableExample(),
@@ -80,16 +82,19 @@ class _Tile extends StatelessWidget {
     required this.model,
     required this.size,
     this.onTap,
+    this.onAnimationEnd,
   }) : super(key: key);
 
   final _TileModel model;
   final VoidCallback? onTap;
+  final VoidCallback? onAnimationEnd;
   final double size;
 
   @override
   Widget build(BuildContext context) {
     return LocalHero(
       tag: model.text!,
+      onAnimationEnd: onAnimationEnd,
       child: GestureDetector(
         onTap: onTap,
         child: _RawTile(
@@ -129,14 +134,63 @@ class _RawTile extends StatelessWidget {
   }
 }
 
+class _SimpleExample extends StatefulWidget {
+  const _SimpleExample({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_SimpleExample> createState() => _SimpleExampleState();
+}
+
+class _SimpleExampleState extends State<_SimpleExample> {
+  var alignment = Alignment.bottomLeft;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Align(
+          alignment: alignment,
+          child: LocalHero(
+            tag: 'unique',
+            onAnimationEnd: () {
+              print('ANIMATION ENDED');
+            },
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (alignment == Alignment.topRight) {
+                    setState(() {
+                      alignment = Alignment.bottomLeft;
+                    });
+                  } else {
+                    setState(() {
+                      alignment = Alignment.topRight;
+                    });
+                  }
+                });
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                color: Colors.red,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class _WrapReorderingAnimation extends StatefulWidget {
   const _WrapReorderingAnimation({
     Key? key,
   }) : super(key: key);
 
   @override
-  _WrapReorderingAnimationState createState() =>
-      _WrapReorderingAnimationState();
+  _WrapReorderingAnimationState createState() => _WrapReorderingAnimationState();
 }
 
 class _WrapReorderingAnimationState extends State<_WrapReorderingAnimation> {
@@ -169,6 +223,9 @@ class _WrapReorderingAnimationState extends State<_WrapReorderingAnimation> {
                     ...tiles.map(
                       (tile) => _Tile(
                         key: ValueKey(tile),
+                        onAnimationEnd: tile.text == '1' ? (){
+                          print('TILE ${tile.text} ENDED');
+                        } : null,
                         size: 80,
                         model: tile,
                         onTap: () {
@@ -210,12 +267,10 @@ class _AcrossContainersAnimation extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AcrossContainersAnimationState createState() =>
-      _AcrossContainersAnimationState();
+  _AcrossContainersAnimationState createState() => _AcrossContainersAnimationState();
 }
 
-class _AcrossContainersAnimationState
-    extends State<_AcrossContainersAnimation> {
+class _AcrossContainersAnimationState extends State<_AcrossContainersAnimation> {
   final List<_TileModel> rowTiles = <_TileModel>[];
   final List<_TileModel> colTiles = <_TileModel>[];
 
@@ -237,25 +292,31 @@ class _AcrossContainersAnimationState
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(4),
-          child: Row(
-            children: <Widget>[
-              ...rowTiles.map(
-                (tile) => _Tile(
-                  key: ValueKey(tile),
-                  model: tile,
-                  size: 80,
-                  onTap: () {
-                    setState(() {
-                      colTiles.add(tile);
-                      rowTiles.remove(tile);
-                    });
-                  },
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: <Widget>[
+                ...rowTiles.map(
+                  (tile) => _Tile(
+                    key: ValueKey(tile),
+                    model: tile,
+                    size: 80,
+                    onTap: () {
+                      setState(
+                        () {
+                          colTiles.add(tile);
+                          rowTiles.remove(tile);
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 10),
