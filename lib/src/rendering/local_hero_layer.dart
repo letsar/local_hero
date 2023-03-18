@@ -31,7 +31,8 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
   void _onAnimationStatusChanged(AnimationStatus status) {
     if (status == AnimationStatus.completed ||
         status == AnimationStatus.dismissed) {
-      if(!child.debugDisposed) markNeedsPaint();
+      final child = this.child;
+      if(child != null && child.debugDisposed) markNeedsPaint();
     }
   }
 
