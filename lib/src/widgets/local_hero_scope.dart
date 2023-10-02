@@ -18,6 +18,7 @@ class LocalHeroScope extends StatefulWidget {
     this.curve = Curves.linear,
     this.createRectTween = _defaultCreateTweenRect,
     required this.child,
+    this.onlyAnimateRemount = false,
   }) : super(key: key);
 
   /// The duration of the animation.
@@ -31,6 +32,19 @@ class LocalHeroScope extends StatefulWidget {
   ///
   /// The default value creates a [MaterialRectArcTween].
   final CreateRectTween createRectTween;
+
+  /// When this is set to true, [LocalHero]s in this scope will only animate
+  /// when the widget is remounted on the widget tree.
+  ///
+  /// This means other position changes like scrolling or changes in padding
+  /// are not animated.
+  ///
+  /// Instead it only happens when the [LocalHero] e.g. changes its index in a
+  /// parent [Row] widget or gets reparented.
+  ///
+  /// Note: To reliably remount a widget it needs to have a unique [Key] in its
+  /// key property.
+  final bool onlyAnimateRemount;
 
   /// The widget below this widget in the tree.
   ///
@@ -63,6 +77,7 @@ class _LocalHeroScopeState extends State<LocalHeroScope>
       curve: widget.curve,
       tag: localHero.tag,
       vsync: this,
+      onlyAnimateRemount: widget.onlyAnimateRemount,
     );
     final Widget shuttle = localHero.flightShuttleBuilder?.call(
           context,

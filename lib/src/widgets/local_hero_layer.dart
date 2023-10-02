@@ -91,6 +91,30 @@ class _LocalHeroLeaderElement extends SingleChildRenderObjectElement {
   @override
   LocalHeroLeader get widget => super.widget as LocalHeroLeader;
 
+  /// Track the slot that this element is in to be able to call
+  /// [LocalHeroController.markRemount] when the slot changes
+  Object? _lastSlot;
+
+  @override
+  void update(SingleChildRenderObjectWidget newWidget) {
+    super.update(newWidget);
+
+    if (slot != _lastSlot) {
+      // Mark remount due to slot change
+      widget.controller.markRemount();
+      _lastSlot = slot;
+    }
+  }
+
+  @override
+  void mount(Element? parent, Object? newSlot) {
+    super.mount(parent, newSlot);
+
+    // Mark remount due to reparenting
+    widget.controller.markRemount();
+    _lastSlot = newSlot;
+  }
+
   @override
   void debugVisitOnstageChildren(ElementVisitor visitor) {
     if (!widget.controller.isAnimating) {
