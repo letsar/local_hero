@@ -36,8 +36,7 @@ class LocalHeroScope extends StatefulWidget {
   /// When this is set to true, [LocalHero]s in this scope will only animate
   /// when the widget is remounted on the widget tree.
   ///
-  /// This means other position changes like scrolling or changes in padding
-  /// are not animated.
+  /// This means other position changes like scrolling are not animated.
   ///
   /// Instead it only happens when the [LocalHero] e.g. changes its index in a
   /// parent [Row] widget or gets reparented.
