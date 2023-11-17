@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:local_hero/src/rendering/controller.dart';
 import 'package:local_hero/src/widgets/local_hero.dart';
 import 'package:local_hero/src/widgets/local_hero_layer.dart';
@@ -143,7 +142,7 @@ class _LocalHeroTracker {
   void addOverlay(BuildContext context) {
     final OverlayState? overlayState = Overlay.of(context);
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!_removeRequested) {
         overlayState!.insert(overlayEntry);
         _overlayInserted = true;
