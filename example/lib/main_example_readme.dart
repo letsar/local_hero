@@ -5,6 +5,21 @@ void main() {
   runApp(const _LocalHeroApp());
 }
 
+class _Box extends StatelessWidget {
+  const _Box({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.red,
+      width: 50,
+      height: 50,
+    );
+  }
+}
+
 class _LocalHeroApp extends StatelessWidget {
   const _LocalHeroApp({
     Key? key,
@@ -28,7 +43,6 @@ class _LocalHeroPage extends StatelessWidget {
     return const Scaffold(
       body: SafeArea(
         child: LocalHeroScope(
-          duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           child: _LocalHeroPlayground(),
         ),
@@ -76,21 +90,6 @@ class _LocalHeroPlaygroundState extends State<_LocalHeroPlayground> {
           child: const Text('Move'),
         ),
       ],
-    );
-  }
-}
-
-class _Box extends StatelessWidget {
-  const _Box({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-      width: 50,
-      height: 50,
     );
   }
 }

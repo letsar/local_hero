@@ -30,8 +30,11 @@ class LocalHeroLayer extends ContainerLayer {
 
   Offset? _transformOffset<S>(Offset localPosition) {
     if (_inverseDirty) {
-      _invertedTransform = Matrix4.tryInvert(getLastTransform()!);
-      _inverseDirty = false;
+      final lastTransform = getLastTransform();
+      if (lastTransform != null) {
+        _invertedTransform = Matrix4.tryInvert(lastTransform);
+        _inverseDirty = false;
+      }
     }
     if (_invertedTransform == null) {
       return null;
@@ -51,7 +54,7 @@ class LocalHeroLayer extends ContainerLayer {
     Offset localPosition, {
     required bool onlyFirst,
   }) {
-    if (controller.link.leader == null) {
+    if (!controller.link.leaderConnected) {
       return false;
     }
     final Offset? transformedOffset = _transformOffset<S>(localPosition);
@@ -90,7 +93,9 @@ class LocalHeroLayer extends ContainerLayer {
     // Apply each layer to the matrix in turn, starting from the last layer,
     // and providing the previous layer as the child.
     for (int index = layers.length - 1; index > 0; index -= 1) {
-      layers[index]!.applyTransform(layers[index - 1], result);
+      if (layers[index - 1] != null) {
+        layers[index]!.applyTransform(layers[index - 1], result);
+      }
     }
     return result;
   }
@@ -99,12 +104,13 @@ class LocalHeroLayer extends ContainerLayer {
   void _establishTransform() {
     _lastTransform = null;
     // Check to see if we are linked.
-    if (controller.link.leader == null) {
+    if (!controller.link.leaderConnected) {
       return;
     }
     // If we're linked, check the link is valid.
-    assert(controller.link.leader!.owner == owner,
-        'Linked LeaderLayer anchor is not in the same layer tree as the FollowerLayer.');
+    if (controller.link.debugLeader?.owner != owner) {
+      return;
+    }
     // Collect all our ancestors into a Set so we can recognize them.
     final Set<Layer> ancestors = <Layer>{};
     Layer? ancestor = parent;
@@ -114,7 +120,7 @@ class LocalHeroLayer extends ContainerLayer {
     }
     // Collect all the layers from a hypothetical child (null) of the target
     // layer up to the common ancestor layer.
-    ContainerLayer layer = controller.link.leader!;
+    ContainerLayer layer = controller.link.debugLeader!;
     final List<ContainerLayer?> forwardLayers = <ContainerLayer?>[null, layer];
     do {
       layer = layer.parent!;
@@ -162,7 +168,7 @@ class LocalHeroLayer extends ContainerLayer {
 
   @override
   void addToScene(ui.SceneBuilder builder, [Offset layerOffset = Offset.zero]) {
-    if (controller.link.leader == null) {
+    if (!controller.link.leaderConnected) {
       _lastTransform = null;
       _lastOffset = null;
       _inverseDirty = true;
