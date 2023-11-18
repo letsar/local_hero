@@ -17,7 +17,7 @@ class LocalHeroScope extends StatefulWidget {
     this.curve = Curves.linear,
     this.createRectTween = _defaultCreateTweenRect,
     required this.child,
-    this.onlyAnimateRemount = false,
+    this.onlyAnimateRemount = true,
   }) : super(key: key);
 
   /// The duration of the animation.
@@ -39,6 +39,8 @@ class LocalHeroScope extends StatefulWidget {
   ///
   /// Instead it only happens when the [LocalHero] e.g. changes its index in a
   /// parent [Row] widget or gets reparented.
+  ///
+  /// Defaults to true.
   ///
   /// Note: To reliably remount a widget it needs to have a unique [Key] in its
   /// key property.
