@@ -1,10 +1,10 @@
 name: local_hero
 description: A widget which implicitly launches a hero animation when its position changed within the same route.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/letsar/local_hero
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
 
 dependencies:
   flutter:

@@ -1,5 +1,4 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:local_hero/src/rendering/controller.dart';
 import 'package:local_hero/src/rendering/layer.dart';
@@ -29,6 +28,9 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
   }
 
   void _onAnimationStatusChanged(AnimationStatus status) {
+    if (!attached) {
+      return;
+    }
     if (status == AnimationStatus.completed ||
         status == AnimationStatus.dismissed) {
       markNeedsPaint();
