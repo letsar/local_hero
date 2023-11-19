@@ -34,7 +34,7 @@ class _LocalHeroPlayground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const TabBar(
@@ -42,6 +42,7 @@ class _LocalHeroPlayground extends StatelessWidget {
               Text('Animate wrap reordering'),
               Text('Move between containers'),
               Text('Draggable content'),
+              Text('Animate scroll view'),
             ],
           ),
         ),
@@ -51,6 +52,7 @@ class _LocalHeroPlayground extends StatelessWidget {
               _WrapReorderingAnimation(),
               _AcrossContainersAnimation(),
               _DraggableExample(),
+              _ScrollViewExample(),
             ],
           ),
         ),
@@ -371,6 +373,102 @@ class _DraggableTileState extends State<_DraggableTile> {
         tag: widget.model!,
         enabled: !dragging,
         child: widget.child,
+      ),
+    );
+  }
+}
+
+class _ScrollViewExample extends StatefulWidget {
+  const _ScrollViewExample();
+
+  @override
+  State<_ScrollViewExample> createState() => _ScrollViewExampleState();
+}
+
+class _ScrollViewExampleState extends State<_ScrollViewExample> {
+  int offset = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> items =
+        List.generate(100, (index) => 'Item ${index + offset}');
+
+    return LocalHeroOverlay(
+      child: Align(
+        child: Row(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  offset += 1;
+                });
+              },
+              child: Text('Remove Item'),
+            ),
+            const SizedBox(width: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  offset -= 1;
+                });
+              },
+              child: Text('Add Item'),
+            ),
+            const SizedBox(width: 50),
+            Container(
+              width: 300,
+              color: Colors.lightBlue.withOpacity(.2),
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _ScrollViewItem(
+                        key: ValueKey<int>(index),
+                        index: index,
+                        items: items,
+                      ),
+                      addRepaintBoundaries: false,
+                      childCount: items.length,
+                      findChildIndexCallback: (key) {
+                        return (key as ValueKey<int>).value - offset;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ScrollViewItem extends StatelessWidget {
+  const _ScrollViewItem({
+    Key? key,
+    required this.index,
+    required this.items,
+  }) : super(key: key);
+
+  final int index;
+  final List<String> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return LocalHero(
+      tag: 'builder ${items[index]}',
+      child: Align(
+        child: Card(
+          color: Colors.blueGrey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              items[index],
+              style: TextStyle(color: Colors.white70),
+            ),
+          ),
+        ),
       ),
     );
   }
