@@ -32,7 +32,7 @@ class LocalHeroScope extends StatefulWidget {
   /// The default value creates a [MaterialRectArcTween].
   final CreateRectTween createRectTween;
 
-  /// When this is set to true, [LocalHero]s in this scope will only animate
+  /// When this is set to true, [LocalHero]es in this scope will only animate
   /// when the widget is remounted on the widget tree.
   ///
   /// This means other position changes like scrolling are not animated.

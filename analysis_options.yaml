@@ -1,9 +1,6 @@
 # Enable all rules by default
 include: all_lint_rules.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
   errors:
     dead_code: warning
     # Otherwise cause the import of all_lint_rules to warn because of some rules conflicts.
@@ -16,9 +13,6 @@ linter:
   rules:
     # We prefer having parameters in the same order as fields https://github.com/flutter/flutter/issues/10219
     always_put_required_named_parameters_first: false
-
-    # Depends on your needs
-    always_require_non_null_named_parameters: false
 
     # Conflicts with `omit_local_variable_types` and other rules.
     # As per Dart guidelines, we want to avoid unnecessary types to make the code

@@ -396,45 +396,51 @@ class _ScrollViewExampleState extends State<_ScrollViewExample> {
     return LocalHeroOverlay(
       child: Align(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  offset += 1;
-                });
-              },
-              child: Text('Remove Item'),
-            ),
-            const SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  offset -= 1;
-                });
-              },
-              child: Text('Add Item'),
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      offset += 1;
+                    });
+                  },
+                  child: Text('Remove Item'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      offset -= 1;
+                    });
+                  },
+                  child: Text('Add Item'),
+                ),
+              ],
             ),
             const SizedBox(width: 50),
-            Container(
-              width: 300,
-              color: Colors.lightBlue.withOpacity(.2),
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _ScrollViewItem(
-                        key: ValueKey<int>(index),
-                        index: index,
-                        items: items,
+            Expanded(
+              child: Container(
+                color: Colors.lightBlue.withOpacity(.2),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => _ScrollViewItem(
+                          key: ValueKey<int>(index),
+                          index: index,
+                          items: items,
+                        ),
+                        addRepaintBoundaries: false,
+                        childCount: items.length,
+                        findChildIndexCallback: (key) {
+                          return (key as ValueKey<int>).value - offset;
+                        },
                       ),
-                      addRepaintBoundaries: false,
-                      childCount: items.length,
-                      findChildIndexCallback: (key) {
-                        return (key as ValueKey<int>).value - offset;
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
