@@ -28,6 +28,8 @@ class LocalHero extends StatefulWidget {
   const LocalHero({
     Key? key,
     required this.tag,
+    this.belowTag,
+    this.aboveTag,
     this.flightShuttleBuilder,
     this.enabled = true,
     required this.child,
@@ -38,6 +40,20 @@ class LocalHero extends StatefulWidget {
   /// If between two frames, the position of a [LocalHero] with the same tag
   /// changes, a local hero animation will be triggered.
   final Object tag;
+
+  /// If `aboveTag` is non-null, the entry is inserted just above the `aboveTag` entry.
+  /// Otherwise, the entry is inserted on top.
+  /// Note that the `aboveTag` entry must already be tracked or it will be ignored.
+  ///
+  /// It is an error to specify both `aboveTag` and `belowTag`.
+  final Object? aboveTag;
+
+  /// If `belowTag` is non-null, the entry is inserted just below the `belowTag` entry.
+  /// Otherwise, the entry is inserted on top.
+  /// Note that the `belowTag` entry must already be tracked or it will be ignored.
+  ///
+  /// It is an error to specify both `aboveTag` and `belowTag`.
+  final Object? belowTag;
 
   /// Optional override to supply a widget that's shown during the local hero's
   /// flight.
@@ -66,7 +82,8 @@ class _LocalHeroState extends State<LocalHero>
   void initState() {
     super.initState();
     scopeState = context.getLocalHeroScopeState();
-    controller = scopeState.track(context, widget);
+    controller = scopeState.track(context, widget,
+        belowTag: widget.belowTag, aboveTag: widget.aboveTag);
   }
 
   @override

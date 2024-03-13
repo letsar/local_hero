@@ -61,16 +61,19 @@ class _LocalHeroScopeState extends State<LocalHeroScope>
   final Map<Object, _LocalHeroTracker> trackers = <Object, _LocalHeroTracker>{};
 
   @override
-  LocalHeroController track(BuildContext context, LocalHero localHero) {
+  LocalHeroController track(BuildContext context, LocalHero localHero,
+      {Object? belowTag, Object? aboveTag}) {
     final _LocalHeroTracker tracker = trackers.putIfAbsent(
       localHero.tag,
-      () => createTracker(context, localHero),
+      () => createTracker(context, localHero,
+          belowTag: belowTag, aboveTag: aboveTag),
     );
     tracker.count++;
     return tracker.controller;
   }
 
-  _LocalHeroTracker createTracker(BuildContext context, LocalHero localHero) {
+  _LocalHeroTracker createTracker(BuildContext context, LocalHero localHero,
+      {Object? belowTag, Object? aboveTag}) {
     final LocalHeroController controller = LocalHeroController(
       duration: widget.duration,
       createRectTween: widget.createRectTween,
@@ -100,7 +103,11 @@ class _LocalHeroScopeState extends State<LocalHeroScope>
       overlayEntry: overlayEntry,
     );
 
-    tracker.addOverlay(context);
+    tracker.addOverlay(
+      context,
+      below: belowTag != null ? trackers[belowTag]?.overlayEntry : null,
+      above: aboveTag != null ? trackers[aboveTag]?.overlayEntry : null,
+    );
     return tracker;
   }
 
@@ -137,7 +144,8 @@ class _LocalHeroScopeState extends State<LocalHeroScope>
 }
 
 abstract class LocalHeroScopeState {
-  LocalHeroController track(BuildContext context, LocalHero localHero);
+  LocalHeroController track(BuildContext context, LocalHero localHero,
+      {Object? belowTag, Object? aboveTag});
 
   void untrack(LocalHero localHero);
 }
@@ -155,12 +163,13 @@ class _LocalHeroTracker {
   bool _removeRequested = false;
   bool _overlayInserted = false;
 
-  void addOverlay(BuildContext context) {
+  void addOverlay(BuildContext context,
+      {OverlayEntry? below, OverlayEntry? above}) {
     final OverlayState? overlayState = Overlay.of(context);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!_removeRequested) {
-        overlayState!.insert(overlayEntry);
+        overlayState!.insert(overlayEntry, below: below, above: above);
         _overlayInserted = true;
       }
     });
